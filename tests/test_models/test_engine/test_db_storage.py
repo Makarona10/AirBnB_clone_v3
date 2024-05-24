@@ -70,14 +70,12 @@ test_db_storage.py'])
 
 @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
 class TestDBStorage(unittest.TestCase):
-    """Test the ]لآ class"""
+    """Test the DB class"""
+
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
         self.assertIs(type(models.storage.all()), dict)
-
-    def test_all_no_class(self):
-        """Test that all returns all rows when no class is passed"""
-
+    
     def test_new(self):
         """test that new adds an object to the database"""
 
