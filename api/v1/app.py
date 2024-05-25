@@ -9,11 +9,13 @@ from os import getenv
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
+app.url_map.strict_slashes = False
 
 @app.teardown_appcontext
-def tear_it_down():
+def tear_it_down(e):
     """Teardown flask app"""
     storage.close()
+
 
 if __name__ == "__main__":
     HOST = getenv('HBNB_API_HOST', '0.0.0.0')
