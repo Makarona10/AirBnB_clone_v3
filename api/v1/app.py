@@ -2,7 +2,7 @@
 """The app module"""
 
 import os
-from flask import Flask
+from flask import Flask, jsonify, make_response
 from api.v1.views import app_views
 from models import storage
 
@@ -16,6 +16,10 @@ app.url_map.strict_slashes = False
 def tear_it_down(e):
     """Teardown flask app"""
     storage.close()
+
+@app.errorhandler(404)
+def handler_for_404():
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == "__main__":
