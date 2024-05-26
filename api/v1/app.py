@@ -17,6 +17,7 @@ def tear_it_down(e):
     """Teardown flask app"""
     storage.close()
 
+
 @app.errorhandler(404)
 def handler_for_404(err):
     return make_response(jsonify({"error": "Not found"}), 404)
