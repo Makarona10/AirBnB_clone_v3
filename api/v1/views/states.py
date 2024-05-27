@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
  
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -17,7 +17,7 @@ def get_state(state_id):
         res = list(filter(lambda x: x.id == state_id, all_states))
         if res:
             return jsonify(res[0].to_dict())
-        abort(404)
+        raise NotFound()
 
     all_states = list(map(lambda x: x.to_dict(), all_states))
     return jsonify(all_states)
