@@ -60,5 +60,5 @@ def modify_state(state_id=None):
             if k not in ['id', 'created_at', 'updated_at']:
                 setattr(old_state, k, val)
         old_state.save()
-        return jsonify(old_state.to_dict()), 200
+        return jsonify(old_state.to_dict()), 201
     abort(404)
