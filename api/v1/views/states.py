@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import BadRequest
  
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -39,9 +39,9 @@ def delete_state(state_id):
 def add_state():
     body = request.get_json(force=True)
     if type(body) is not dict:
-        return make_response(jsonify({"error": "Not JSON"}), 400)
+        raise BadRequest(description="Not a JSON")
     if "name" not in body:
-        return make_response(jsonify({"error": "Missing a name"}), 400)
+        raise BadRequest(description="Missing name")
     state = State(**body)
     state.save()
     return make_response(jsonify(state.to_dict()), 201)
