@@ -48,7 +48,7 @@ def remove_state(state_id=None):
         storage.delete(res[0])
         storage.save()
         return jsonify({}), 200
-    raise NotFound()
+    raise abort(404)
 
 
 def add_state(state_id=None):
@@ -60,7 +60,7 @@ def add_state(state_id=None):
         raise BadRequest(description='Missing name')
     new_state = State(**data)
     new_state.save()
-    return jsonify(new_state.to_dict()), 201
+    return make_response(jsonify(new_state.to_dict()), 201)
 
 
 def update_state(state_id=None):
@@ -77,5 +77,5 @@ def update_state(state_id=None):
             if key not in xkeys:
                 setattr(old_state, key, value)
         old_state.save()
-        return jsonify(old_state.to_dict()), 200
-    raise NotFound()
+        return make_response(jsonify(old_state.to_dict()), 200)
+    abort(404)
