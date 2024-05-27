@@ -64,13 +64,25 @@ def updates_user(user_id):
         abort(404)
     if not request.get_json():
         abort(400, 'Not a JSON')
-    user[0]['first_name'] = request.json['first_name']
-    user[0]['last_name'] = request.json['last_name']
+    try:
+        user[0]['first_name'] = request.json['first_name']
+    except:
+        pass
+    try:
+        user[0]['last_name'] = request.json['last_name']
+    except:
+        pass
     for obj in users:
         if obj.id == user_id:
-            if request.json['first_name'] is not None:
-                obj.first_name = request.json['first_name']
-            if request.json['last_name'] is not None:
-                obj.last_name = request.json['last_name']
+            try:
+                if request.json['first_name'] is not None:
+                    obj.first_name = request.json['first_name']
+            except:
+                pass
+            try:
+                if request.json['last_name'] is not None:
+                    obj.last_name = request.json['last_name']
+            except:
+                pass
     storage.save()
     return make_response(jsonify(user[0]), 200)
