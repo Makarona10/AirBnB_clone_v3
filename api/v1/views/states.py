@@ -61,4 +61,4 @@ def modify_state(state_id=None):
                 setattr(old_state, k, val)
         old_state.save()
         return jsonify(old_state.to_dict()), 200
-    abort(404)
+    abort(403)
