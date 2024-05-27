@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
  
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
