@@ -23,6 +23,7 @@ def method_router(state_id=None):
     }
     return specifier[request.method](state_id)
 
+
 def get_states(state_id=None):
     """Return all states or a single state using its id"""
     states = storage.all("State").values()

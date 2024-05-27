@@ -7,7 +7,8 @@ from models import storage
 from models.city import City
 
 
-@app_views.route('/states/<state_id>/cities',methods=['GET'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities',
+                 methods=['GET'], strict_slashes=False)
 def listCities(state_id):
     """Retrieves all Citites"""
     states = storage.all("State").values()
@@ -15,7 +16,7 @@ def listCities(state_id):
     if not state_obj:
         abort(404)
     cities = [obj.to_dict() for obj in storage.all("City").values()
-                   if state_id == obj.state_id]
+              if state_id == obj.state_id]
     return jsonify(cities)
 
 
@@ -29,7 +30,8 @@ def get_city(city_id):
     return jsonify(city_obj[0])
 
 
-@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities',
+                 methods=['POST'], strict_slashes=False)
 def add_city(state_id):
     """Creates a new City"""
     body = request.get_json()
@@ -47,8 +49,6 @@ def add_city(state_id):
     storage.save()
     cities.append(new_city.to_dict())
     return jsonify(cities[0]), 201
-
-
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'])
