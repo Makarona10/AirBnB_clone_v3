@@ -42,7 +42,7 @@ def add_city(state_id):
     if state_obj == []:
         abort(404)
     cities = []
-    new_city = City(**body)
+    new_city = City(name=request.json['name'], state_id=state_id)
     storage.new(new_city)
     storage.save()
     cities.append(new_city.to_dict())
