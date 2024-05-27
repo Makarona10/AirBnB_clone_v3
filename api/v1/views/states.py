@@ -37,7 +37,7 @@ def delete_state(state_id):
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def add_state():
-    body = request.get_json()
+    body = request.get_json(force=True)
     if type(body) is not dict:
         return make_response(jsonify({"error": "Not a JSON"}), 400)
     if "name" not in body:
