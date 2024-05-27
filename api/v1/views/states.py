@@ -6,7 +6,6 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import MethodNotAllowed
 
 
 ALLOWED_METHODS = ['GET', 'DELETE', 'POST', 'PUT']
@@ -22,12 +21,7 @@ def method_router(state_id=None):
         'PUT': modify_state,
         'DELETE': delete_state
     }
-    if request.method in specifier:
-        return specifier[request.method](state_id)
-    else:
-        # raise MethodNotAllowed(list(specifier.keys()))
-        pass
-
+    return specifier[request.method](state_id)
 
 def get_states(state_id=None):
     """Return all states or a single state using its id"""

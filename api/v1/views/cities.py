@@ -2,7 +2,7 @@
 """cities module"""
 
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models import storage
 from models.city import City
 
@@ -21,7 +21,7 @@ def listCities(state_id):
 
 @app_views.route('/cities/<city_id>', methods=['GET'])
 def get_city(city_id):
-    '''Retrieves a City object'''
+    """Retrieves a City"""
     cities = storage.all("City").values()
     city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
     if city_obj == []:
@@ -55,10 +55,10 @@ def add_city(state_id):
 def delete_city(city_id):
     """Deletes a City"""
     cities = storage.all("City").values()
-    city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
-    if city_obj == []:
+    city = [obj.to_dict() for obj in cities if obj.id == city_id]
+    if city == []:
         abort(404)
-    city_obj.remove(city_obj[0])
+    city.remove(city[0])
     for obj in cities:
         if obj.id == city_id:
             storage.delete(obj)
@@ -68,16 +68,16 @@ def delete_city(city_id):
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
 def updates_city(city_id):
-    '''Updates a City object'''
+    """Updates a City information"""
     cities = storage.all("City").values()
-    city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
-    if city_obj == []:
+    ciry = [obj.to_dict() for obj in cities if obj.id == city_id]
+    if ciry == []:
         abort(404)
     if not request.get_json():
-        abort(400, 'Not a JSON')
-    city_obj[0]['name'] = request.json['name']
+        abort(400, "Not a JSON")
+    ciry[0]['name'] = request.json['name']
     for obj in cities:
         if obj.id == city_id:
             obj.name = request.json['name']
     storage.save()
-    return jsonify(city_obj[0]), 200
+    return make_response(jsonify(ciry[0]), 200)
