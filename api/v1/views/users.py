@@ -39,7 +39,7 @@ def delete_user(user_id):
     return jsonify({}), 200
 
 
-@app_views.route('/users/', methods=['POST'], strict_slashes=False)
+@app_views.route('/users', methods=['POST'], strict_slashes=False)
 def create_user():
     """Creates a new user"""
     if not request.get_json():
