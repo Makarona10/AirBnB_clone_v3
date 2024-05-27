@@ -25,7 +25,8 @@ def method_router(state_id=None):
     if request.method in specifier:
         return specifier[request.method](state_id)
     else:
-        raise MethodNotAllowed(list(specifier.keys()))
+        # raise MethodNotAllowed(list(specifier.keys()))
+        pass
 
 
 def get_states(state_id=None):
