@@ -63,7 +63,7 @@ def delete_city(city_id):
         if obj.id == city_id:
             storage.delete(obj)
             storage.save()
-    return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
