@@ -27,26 +27,26 @@ def get_user(user_id):
 @app_views.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     """Deletes a user"""
-    all_users = storage.all("User").values()
-    user_obj = [obj.to_dict() for obj in all_users if obj.id == user_id]
-    if user_obj == []:
+    users = storage.all("User").values()
+    user = [obj.to_dict() for obj in users if obj.id == user_id]
+    if user == []:
         abort(404)
-    user_obj.remove(user_obj[0])
-    for obj in all_users:
+    user.remove(user[0])
+    for obj in users:
         if obj.id == user_id:
             storage.delete(obj)
             storage.save()
-    return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
-@app_views.route('/users/', methods=['POST'])
+@app_views.route('/users', methods=['POST'])
 def create_user():
     """Creates a new user"""
     if not request.get_json():
         abort(400, "Not a JSON")
     if "email" not in request.get_json():
         abort(400, "Missing name")
-    if 'password' not in request.get_json():
+    if "password" not in request.get_json():
         abort(400, "Missing name")
     new_user = User(email=request.json['email'],
                     password=request.json['password'])
