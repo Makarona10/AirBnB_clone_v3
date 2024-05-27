@@ -54,9 +54,9 @@ def modify_state(state_id):
     if the_state is None:
         abort(404)
 
-    body = request.get_json(force=True)
+    body = request.get_json()
     if type(body) is not dict:
-        return make_response(jsonify({"error": "Not a JSON"}), 400)
+        raise BadRequest(description="Not a JSON")
     for k in body.keys():
         if k not in ["id", "created_at", "updated_at"]:
             continue
