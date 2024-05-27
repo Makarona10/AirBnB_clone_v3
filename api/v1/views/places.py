@@ -1,19 +1,21 @@
 #!/usr/bin/python3
-"""The places module"""
-
-
+"""places"""
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
+from models.city import City
 from models.place import Place
+from datetime import datetime
+import uuid
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
-def get_places_of_a_city(city_id):
-    """Retrieves all places of a city"""
-    cities = storage.all("City").values()
-    city = [obj.to_dict() for obj in cities if obj.id == city_id]
-    if not cities:
+@app_views.route('/cities/<city_id>/places', methods=['GET'])
+@app_views.route('/cities/<city_id>/places/', methods=['GET'])
+def list_places_of_city(city_id):
+    '''Retrieves a list of all Place objects in city'''
+    all_cities = storage.all("City").values()
+    city_obj = [obj.to_dict() for obj in all_cities if obj.id == city_id]
+    if city_obj == []:
         abort(404)
     list_places = [obj.to_dict() for obj in storage.all("Place").values()
                    if city_id == obj.city_id]
