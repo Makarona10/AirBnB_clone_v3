@@ -52,5 +52,6 @@ def modify_state(state_id):
             continue
         else:
             state[k] = body[k]
-    storage.save()
+    state = State(**state)
+    state.save()
     return make_response(jsonify(state.to_dict()))
