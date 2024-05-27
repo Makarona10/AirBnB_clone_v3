@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import BadRequest, MethodNotAllowed
+from werkzeug.exceptions import MethodNotAllowed
 
 
 ALLOWED_METHODS = ['GET', 'DELETE', 'POST', 'PUT']
@@ -55,9 +55,9 @@ def add_state(state_id=None):
     """Adds a new state"""
     body = request.get_json()
     if type(body) is not dict:
-        raise BadRequest(description='Not a JSON')
+        abort(400, "Not a JSON")
     if "name" not in body:
-        raise BadRequest(description='Missing name')
+        abort(400, "Missing name")
     new_state = State(**body)
     new_state.save()
     return make_response(jsonify(new_state.to_dict()), 201)
@@ -70,7 +70,7 @@ def modify_state(state_id=None):
     if the_state:
         data = request.get_json()
         if type(data) is not dict:
-            raise BadRequest(description='Not a JSON')
+            abort(400, "Not a JSON")
         old_state = the_state[0]
         for k, val in data.items():
             if k not in ['id', 'created_at', 'updated_at']:
