@@ -19,6 +19,16 @@ def listCities(state_id):
     return jsonify(cities)
 
 
+@app_views.route('/cities/<city_id>', methods=['GET'])
+def get_city(city_id):
+    '''Retrieves a City object'''
+    cities = storage.all("City").values()
+    city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
+    if city_obj == []:
+        abort(404)
+    return jsonify(city_obj[0])
+
+
 @app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
 def add_city(state_id):
     """Creates a new City"""
@@ -39,19 +49,11 @@ def add_city(state_id):
     return jsonify(cities[0]), 201
 
 
-@app_views.route('/cities/<city_id>', methods=['GET'])
-def get_city(city_id):
-    '''Retrieves a City object'''
-    cities = storage.all("City").values()
-    city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
-    if city_obj == []:
-        abort(404)
-    return jsonify(city_obj[0])
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'])
 def delete_city(city_id):
-    '''Deletes a City object'''
+    """Deletes a City"""
     cities = storage.all("City").values()
     city_obj = [obj.to_dict() for obj in cities if obj.id == city_id]
     if city_obj == []:

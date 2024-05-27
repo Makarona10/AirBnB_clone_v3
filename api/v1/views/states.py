@@ -59,7 +59,7 @@ def add_state(state_id=None):
     if "name" not in body:
         abort(400, "Missing name")
     new_state = State(**body)
-    new_state.save()
+    new_state.to_dict().save()
     return make_response(jsonify(new_state.to_dict()), 201)
 
 
