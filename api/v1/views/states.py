@@ -41,10 +41,9 @@ def get_states(state_id=None):
 
 
 def remove_state(state_id=None):
-    '''Removes a state with the given id.
-    '''
+    """Deletes a state"""
     all_states = storage.all(State).values()
-    res = list(filter(lambda x: x.id == state_id, all_states))
+    res = [state for state in all_states if state.id == state_id]
     if res:
         storage.delete(res[0])
         storage.save()
@@ -53,8 +52,7 @@ def remove_state(state_id=None):
 
 
 def add_state(state_id=None):
-    '''Adds a new state.
-    '''
+    """Adds a new state"""
     data = request.get_json()
     if type(data) is not dict:
         raise BadRequest(description='Not a JSON')
@@ -66,11 +64,10 @@ def add_state(state_id=None):
 
 
 def update_state(state_id=None):
-    '''Updates the state with the given id.
-    '''
+    """Updates a state information"""
     xkeys = ('id', 'created_at', 'updated_at')
     all_states = storage.all(State).values()
-    res = list(filter(lambda x: x.id == state_id, all_states))
+    res = [state for state in all_states if state.id == state_id]
     if res:
         data = request.get_json()
         if type(data) is not dict:
