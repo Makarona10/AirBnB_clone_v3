@@ -48,13 +48,11 @@ def create_user():
         abort(400, 'Missing name')
     if 'password' not in request.get_json():
         abort(400, 'Missing name')
-    users = []
     new_user = User(email=request.json['email'],
                     password=request.json['password'])
     storage.new(new_user)
     storage.save()
-    users.append(new_user.to_dict())
-    return jsonify(users[0]), 201
+    return make_response(jsonify(new_user.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'])
@@ -87,4 +85,4 @@ def updates_user(user_id):
             except:
                 pass
     storage.save()
-    return jsonify(user_obj[0]), 200
+    return make_response(jsonify(user_obj[0]), 200)
