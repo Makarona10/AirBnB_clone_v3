@@ -48,20 +48,18 @@ def add_state():
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
-def modify_state(state_id):
-    states = storage.all(State).values()
-    the_state = [state for state in states if state.id == state_id]
-    if the_state is None:
-        abort(404)
-
-    body = request.get_json()
-    if type(body) is not dict:
-        raise BadRequest(description="Not a JSON")
-    for k in body.keys():
-        if k not in ["id", "created_at", "updated_at"]:
-            continue
-        else:
-            the_state[k] = body[k]
-    the_state = State(**the_state)
-    the_state.save()
-    return make_response(jsonify(the_state.to_dict()))
+def modify_state(state_id=None):
+    xkeys = ('id', 'created_at', 'updated_at')
+    all_states = storage.all(State).values()
+    res = list(filter(lambda x: x.id == state_id, all_states))
+    if res:
+        data = request.get_json()
+        if type(data) is not dict:
+            raise BadRequest(description='Not a JSON')
+        old_state = res[0]
+        for key, value in data.items():
+            if key not in xkeys:
+                setattr(old_state, key, value)
+        old_state.save()
+        return jsonify(old_state.to_dict()), 200
+    abort(404)
