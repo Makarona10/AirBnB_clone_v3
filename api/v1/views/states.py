@@ -32,7 +32,7 @@ def get_states(state_id=None):
     """Return all states or a single state using its id"""
     all_states = storage.all(State).values()
     if state_id:
-        res = list(filter(lambda x: x.id == state_id, all_states))
+        res = [state for state in all_states if state.id == state_id]
         if res:
             return jsonify(res[0].to_dict())
         raise NotFound()
