@@ -12,7 +12,7 @@ def get_state(state_id):
     state = storage.get("State", state_id)
     if state is None:
         abort(404)
-    return make_response(jsonify(state.to_dict()))
+    return (jsonify(state.to_dict()))
 
 
 @app_views.route('/states/<state_id>',
