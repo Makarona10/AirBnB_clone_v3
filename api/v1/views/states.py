@@ -39,12 +39,12 @@ def delete_state(state_id):
 def add_state():
     body = request.get_json(force=True)
     if type(body) is not dict:
-        return make_response(jsonify({"error": "Not a JSON"}), 400)
+        return make_response(jsonify({"error": "Not JSON"}), 400)
     if "name" not in body:
-        return make_response(jsonify({"error": "Missing name"}), 400)
+        return make_response(jsonify({"error": "Missing a name"}), 400)
     state = State(**body)
     state.save()
-    return make_response(jsonify(state.to_dict()), 202)
+    return make_response(jsonify(state.to_dict()), 201)
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
