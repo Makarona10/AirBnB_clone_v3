@@ -3,9 +3,10 @@
 
 
 from models import storage
+from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
-
+ 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def get_state(state_id):
@@ -33,8 +34,8 @@ def add_state():
         return make_response(jsonify({"error": "Not a JSON"}), 400)
     if "name" not in body:
         return make_response(jsonify({"error": "Missing name"}), 400)
-    storage.new(body)
-    storage.save()
+    state = State(**body)
+    state.save()
     return make_response(jsonify(body.to_dict()), 201)
 
 
