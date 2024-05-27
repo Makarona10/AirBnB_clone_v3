@@ -6,6 +6,7 @@ from models import storage
 from models.state import State
 from api.v1.views import app_views
 from flask import make_response, jsonify, abort, request
+from werkzeug.exceptions import NotFound
  
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -31,7 +32,7 @@ def delete_state(state_id):
         storage.delete(stateObj[0])
         storage.save()
         return jsonify({}), 200
-    abort(404)
+    raise NotFound()
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
