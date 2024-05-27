@@ -25,7 +25,7 @@ def method_router(state_id=None):
 
 def get_states(state_id=None):
     """Return all states or a single state using its id"""
-    states = storage.all(State).values()
+    states = storage.all("State").values()
     if state_id:
         res = [state for state in states if state.id == state_id]
         if res:
@@ -37,7 +37,7 @@ def get_states(state_id=None):
 
 def delete_state(state_id=None):
     """Deletes a state"""
-    states = storage.all(State).values()
+    states = storage.all("State").values()
     state_to_delete = [state for state in states if state.id == state_id]
     if state_to_delete:
         storage.delete(state_to_delete[0])
@@ -60,7 +60,7 @@ def add_state(state_id=None):
 
 def modify_state(state_id=None):
     """Updates a state information"""
-    states = storage.all(State).values()
+    states = storage.all("State").values()
     the_state = [state for state in states if state.id == state_id]
     if the_state:
         data = request.get_json()

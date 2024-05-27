@@ -36,7 +36,7 @@ def add_city(state_id):
     if not body:
         abort(400, "Not a JSON")
     if "name" not in body:
-        abort(400, 'Missing name')
+        abort(400, "Missing name")
     states = storage.all("State").values()
     state_obj = [obj.to_dict() for obj in states if obj.id == state_id]
     if state_obj == []:
