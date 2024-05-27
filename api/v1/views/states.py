@@ -51,12 +51,12 @@ def add_state():
 def modify_state(state_id=None):
     xkeys = ('id', 'created_at', 'updated_at')
     all_states = storage.all(State).values()
-    res = list(filter(lambda x: x.id == state_id, all_states))
-    if res:
+    the_state = [state for state in all_states]
+    if the_state:
         data = request.get_json()
         if type(data) is not dict:
             raise BadRequest(description='Not a JSON')
-        old_state = res[0]
+        old_state = the_state[0]
         for key, value in data.items():
             if key not in xkeys:
                 setattr(old_state, key, value)
