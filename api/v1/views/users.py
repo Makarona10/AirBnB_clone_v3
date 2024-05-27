@@ -27,19 +27,19 @@ def get_user(user_id):
 @app_views.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     """Deletes a user"""
-    users = storage.all("User").values()
-    user = [obj.to_dict() for obj in users if obj.id == user_id]
-    if user == []:
+    all_users = storage.all("User").values()
+    user_obj = [obj.to_dict() for obj in all_users if obj.id == user_id]
+    if user_obj == []:
         abort(404)
-    user.remove(user[0])
-    for obj in users:
+    user_obj.remove(user_obj[0])
+    for obj in all_users:
         if obj.id == user_id:
             storage.delete(obj)
             storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
-@app_views.route('/users', methods=['POST'])
+@app_views.route('/users/', methods=['POST'], strict_slashes=False)
 def create_user():
     """Creates a new user"""
     if not request.get_json():
