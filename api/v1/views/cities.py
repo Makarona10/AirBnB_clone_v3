@@ -4,22 +4,18 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
 from models.city import City
-from models.state import State
-from datetime import datetime
-import uuid
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'])
-@app_views.route('/states/<state_id>/cities/', methods=['GET'])
-def list_cities_of_state(state_id):
-    '''Retrieves a list of all City objects'''
-    all_states = storage.all("State").values()
-    state_obj = [obj.to_dict() for obj in all_states if obj.id == state_id]
-    if state_obj == []:
+@app_views.route('/states/<state_id>/cities',methods=['GET'], strict_slashes=False)
+def listCities(state_id):
+    """Retrieves all Citites"""
+    states = storage.all("State").values()
+    state_obj = [obj.to_dict() for obj in states if obj.id == state_id]
+    if not state_obj:
         abort(404)
-    list_cities = [obj.to_dict() for obj in storage.all("City").values()
+    cities = [obj.to_dict() for obj in storage.all("City").values()
                    if state_id == obj.state_id]
-    return jsonify(list_cities)
+    return jsonify(cities)
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'])
