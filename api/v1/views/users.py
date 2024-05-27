@@ -7,17 +7,16 @@ from models import storage
 from models.user import User
 
 
-@app_views.route('/users/', methods=['GET'])
 @app_views.route('/users', methods=['GET'])
-def list_users():
-    '''Retrieves a list of all User objects'''
-    list_users = [obj.to_dict() for obj in storage.all("User").values()]
-    return jsonify(list_users)
+def get_users():
+    """Retrieves all users"""
+    users = [obj.to_dict() for obj in storage.all("User").values()]
+    return jsonify(users)
 
 
 @app_views.route('/users/<user_id>', methods=['GET'])
 def get_user(user_id):
-    '''Retrieves a User object'''
+    """Retrieves a user"""
     all_users = storage.all("User").values()
     user_obj = [obj.to_dict() for obj in all_users if obj.id == user_id]
     if user_obj == []:
@@ -27,7 +26,7 @@ def get_user(user_id):
 
 @app_views.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    '''Deletes a User object'''
+    """Deletes a user"""
     all_users = storage.all("User").values()
     user_obj = [obj.to_dict() for obj in all_users if obj.id == user_id]
     if user_obj == []:
@@ -42,7 +41,7 @@ def delete_user(user_id):
 
 @app_views.route('/users/', methods=['POST'])
 def create_user():
-    '''Creates a User'''
+    """Creates a new user"""
     if not request.get_json():
         abort(400, 'Not a JSON')
     if 'email' not in request.get_json():
@@ -60,7 +59,7 @@ def create_user():
 
 @app_views.route('/users/<user_id>', methods=['PUT'])
 def updates_user(user_id):
-    '''Updates a User object'''
+    """Updates a User object"""
     all_users = storage.all("User").values()
     user_obj = [obj.to_dict() for obj in all_users if obj.id == user_id]
     if user_obj == []:
