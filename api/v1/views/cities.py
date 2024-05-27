@@ -1,35 +1,31 @@
 #!/usr/bin/python3
-"""The City module"""
+'''Contains the cities view for the API.'''
+from flask import jsonify, request
+from werkzeug.exceptions import NotFound, MethodNotAllowed, BadRequest
 
-
-from models import storage
-from models.city import City
-from models.state import State
-from models.review import Review
-from models.place import Place
 from api.v1.views import app_views
-from flask import make_response, jsonify, abort, request
-from werkzeug.exceptions import BadRequest, MethodNotAllowed
-from os import getenv
+from models import storage, storage_t
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
 
 
-ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
-
-
-@app_views.route('/states/<state_id>/cities', methods=[ALLOWED_METHODS[0], ALLOWED_METHODS[1]])
-@app_views.route('/cities/<city_id>', methods=ALLOWED_METHODS)
-def method_specifier(state_id=None, city_id=None):
-    """The method handler for the cities endpoint"""
-    specifier = {
+@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
+@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'POST', 'PUT'])
+def handle_cities(state_id=None, city_id=None):
+    '''The method handler for the cities endpoint.
+    '''
+    handlers = {
         'GET': get_cities,
         'DELETE': remove_city,
         'POST': add_city,
         'PUT': update_city,
     }
-    if request.method in specifier:
-        return specifier[request.method](state_id, city_id)
+    if request.method in handlers:
+        return handlers[request.method](state_id, city_id)
     else:
-        raise MethodNotAllowed(list(specifier.keys()))
+        raise MethodNotAllowed(list(handlers.keys()))
 
 
 def get_cities(state_id=None, city_id=None):
@@ -45,7 +41,7 @@ def get_cities(state_id=None, city_id=None):
         city = storage.get(City, city_id)
         if city:
             return jsonify(city.to_dict())
-    abort(404)
+    raise NotFound()
 
 
 def remove_city(state_id=None, city_id=None):
@@ -55,7 +51,7 @@ def remove_city(state_id=None, city_id=None):
         city = storage.get(City, city_id)
         if city:
             storage.delete(city)
-            if getenv("HBNB_TYPE_STORAGE") != "db":
+            if storage_t != "db":
                 for place in storage.all(Place).values():
                     if place.city_id == city_id:
                         for review in storage.all(Review).values():
@@ -64,7 +60,7 @@ def remove_city(state_id=None, city_id=None):
                         storage.delete(place)
             storage.save()
             return jsonify({}), 200
-    abort(404)
+    raise NotFound()
 
 
 def add_city(state_id=None, city_id=None):
@@ -72,7 +68,7 @@ def add_city(state_id=None, city_id=None):
     '''
     state = storage.get(State, state_id)
     if not state:
-        raise abort(404)
+        raise NotFound()
     data = request.get_json()
     if type(data) is not dict:
         raise BadRequest(description='Not a JSON')
@@ -99,4 +95,4 @@ def update_city(state_id=None, city_id=None):
                     setattr(city, key, value)
             city.save()
             return jsonify(city.to_dict()), 200
-    abort(404)
+    raise NotFound()
