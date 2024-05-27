@@ -14,13 +14,13 @@ def get_state(state_id):
     all_states = storage.all(State).values()
 
     if state_id:
-        res = [state for state in all_states if state.id == state_id]
+        res = list(filter(lambda x: x.id == state_id, all_states))
         if res:
             return jsonify(res[0].to_dict())
         abort(404)
 
-    all_states_dict = [state.to_dict() for state in all_states]
-    return jsonify(all_states_dict)
+    all_states = list(map(lambda x: x.to_dict(), all_states))
+    return jsonify(all_states)
 
 
 @app_views.route('/states/<state_id>',
@@ -50,13 +50,16 @@ def add_state():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def modify_state(state_id=None):
     """Update a state"""
-    state = storage.get("State", state_id)
-    if state is None:
-        abort(404)
-    if not request.get_json():
-        return make_response(jsonify({'error': 'Not a JSON'}), 400)
-    for attr, val in request.get_json().items():
-        if attr not in ['id', 'created_at', 'updated_at']:
-            setattr(state, attr, val)
-    state.save()
-    return make_response(jsonify(state.to_dict()), 200)
+    all_states = storage.all(State).values()
+    the_state = [state for state in all_states if state.id == state_id]
+    if the_state:
+        data = request.get_json()
+        if type(data) is not dict:
+            raise BadRequest(description='Not a JSON')
+        old_state = the_state[0]
+        for k, val in data.items():
+            if k not in ['id', 'created_at', 'updated_at']:
+                setattr(old_state, k, val)
+        old_state.save()
+        return make_response(jsonify(old_state.to_dict()), 200)
+    abort(404)
